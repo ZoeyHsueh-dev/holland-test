@@ -45,7 +45,6 @@
         { "text": "與朋友聊生活近況", "type": "S" }
       ]
     }
-    // ... 更多情境問題
   ],
   "activityQuestions": [
     {
@@ -60,7 +59,6 @@
       "activity": "創作藝術作品或音樂",
       "type": "A"
     }
-    // ... 更多活動問題
   ],
   "typeDescriptions": {
     "R": {
