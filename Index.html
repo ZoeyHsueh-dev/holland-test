@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Holland六型人格測驗</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- 引入Chart.js用於生成圖表 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>Holland六型人格測驗</h1>
+        <div class="progress-container">
+          <div id="progress-bar" class="progress-bar"></div>
+        </div>
+      </header>
+      
+      <div id="test-introduction" class="section">
+        <h2>歡迎參加Holland六型人格測驗</h2>
+        
+        <div class="introduction-text">
+          <p>這份測驗是根據 <strong>Holland 六型人格理論</strong> 所設計，用來協助你了解自己的性格傾向與職業偏好之間的關聯。</p>
+          
+          <p>Holland 理論認為，每個人對工作、環境與活動的喜好可分為六種類型：<strong>實踐者（Realistic）、思考者（Investigative）、創造者（Artistic）、助人者（Social）、影響者（Enterprising）、組織者（Conventional）</strong>。每個人可能同時具備多種類型的特質，而這些特質會影響你傾向從事什麼樣的任務、適合什麼樣的工作環境。</p>
+          
+          <p>請記得，這份測驗呈現的是你「現階段」的性格輪廓，而人的性格會隨著經歷、環境與自我成長而有所轉變。這不是對你的定義，而是一份幫助你更理解自己的參考地圖。</p>
+          
+          <p>請放下對錯的標準，依直覺作答，讓我們一起看看現在的你，在哪些方向上更有可能找到自己的定位與熱情。</p>
+        </div>
+        
+        <p>測驗包含兩個部分：</p>
+        <ol>
+          <li>情境選擇題（18題）：針對不同情境選擇你最可能的反應</li>
+          <li>活動偏好題（18題）：評估你對不同活動的喜好程度</li>
+        </ol>
+        <p>完成測驗大約需要10-15分鐘。請盡可能真實地回答每個問題。</p>
+        <button id="start-test" class="btn">開始測驗</button>
+      </div>
+      
+      <div id="situation-section" class="section hidden">
+        <h2>第一部分：情境選擇題</h2>
+        <p>請選擇最符合你個人偏好的選項：</p>
+        <div id="situation-questions"></div>
+        <div class="button-group">
+          <button id="next-to-activity" class="btn" disabled>下一部分</button>
+        </div>
+      </div>
+      
+      <div id="activity-section" class="section hidden">
+        <h2>第二部分：活動偏好題</h2>
+        <p>請評估下列活動對你的吸引程度（1分表示完全不像，5分表示非常像）：</p>
+        <div id="activity-questions"></div>
+        <div class="button-group">
+          <button id="submit-test" class="btn" disabled>提交測驗</button>
+        </div>
+      </div>
+      
+      <div id="results-section" class="section" style="display:none; flex-direction:column;">
+        <h2 id="result-title">你的Holland六型人格測驗結果</h2>
+        
+        <!-- 第一個區塊：分佈圖 -->
+        <div class="result-block chart-block">
+          <div id="score-chart-container">
+            <canvas id="score-chart"></canvas>
+          </div>
+        </div>
+        
+        <!-- 第二個區塊：主要職業興趣類型 -->
+        <div class="result-block top-types-block">
+          <div id="top-types"></div>
+        </div>
+        
+        <!-- 第三個區塊：六大性格分數 -->
+        <div class="result-block scores-block">
+          <h3>你的六型人格分數</h3>
+          <div id="scores-container"></div>
+        </div>
+        
+        <!-- 第四個區塊：人格特質簡介 -->
+        <div class="result-block description-block">
+          <div id="holland-description"></div>
+        </div>
+        
+        <button id="restart-test" class="btn">重新測驗</button>
+        
+        <!-- 分享區塊 -->
+        <div class="share-block">
+          <h3>分享你的測驗結果</h3>
+          <div class="share-buttons">
+            <button id="share-facebook" class="share-btn facebook">分享到Facebook</button>
+            <button id="share-line" class="share-btn line">分享到Line</button>
+            <button id="share-copy" class="share-btn copy">複製連結</button>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <p>© <span id="current-year"></span> Zoey Hsueh. 本測驗內容由 Zoey Hsueh 製作，未經授權不得轉載或改作。</p>
+      </footer>
+    </div>
+    
+    <!-- 主要 JavaScript 檔案 -->
+    <script src="script.js"></script>
+    
+    <!-- 設定年份 -->
+    <script>
+      document.getElementById('current-year').textContent = new Date().getFullYear();
+      
+      // 檢查URL參數並載入結果（如果有）
+      window.addEventListener('DOMContentLoaded', function() {
+        loadResultsFromURL();
+      });
+    </script>
+  </body>
+</html>
