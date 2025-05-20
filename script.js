@@ -257,7 +257,7 @@ function generateScoreChart(scores) {
         '組織者 (C)'
       ],
       datasets: [{
-        label: '你的分數',
+        label: '您的分數',
         data: [scores.R, scores.I, scores.A, scores.S, scores.E, scores.C],
         backgroundColor: 'rgba(175, 193, 162, 0.2)',
         borderColor: 'rgba(175, 193, 162, 1)',
@@ -266,12 +266,36 @@ function generateScoreChart(scores) {
       }]
     },
     options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: {
+          labels: {
+            font: {
+              size: 16 // 增加圖例字體大小
+            }
+          }
+        }
+      },
       scales: {
         r: {
           beginAtZero: true,
           suggestedMax: 30,
           ticks: {
-            stepSize: 5
+            stepSize: 5,
+            display: false // 隱藏刻度數字以減少雜亂
+          },
+          pointLabels: {
+            font: {
+              size: 16, // 增加軸標籤字體大小
+              weight: 'bold' // 加粗字體
+            }
+          },
+          grid: {
+            color: 'rgba(0, 0, 0, 0.1)' // 使網格線更淡
+          },
+          angleLines: {
+            color: 'rgba(0, 0, 0, 0.1)' // 使角度線更淡
           }
         }
       }
