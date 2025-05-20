@@ -259,10 +259,10 @@ function generateScoreChart(scores) {
       datasets: [{
         label: '你的分數',
         data: [scores.R, scores.I, scores.A, scores.S, scores.E, scores.C],
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-        borderColor: 'rgba(75, 192, 192, 1)',
+        backgroundColor: 'rgba(175, 193, 162, 0.2)',
+        borderColor: 'rgba(175, 193, 162, 1)',
         borderWidth: 2,
-        pointBackgroundColor: 'rgba(75, 192, 192, 1)'
+        pointBackgroundColor: 'rgba(175, 193, 162, 1)'
       }]
     },
     options: {
@@ -348,24 +348,51 @@ function showAllScores(scores) {
 function showHollandDescription(scores) {
   const descriptionContainer = document.getElementById('holland-description');
   
-  // 找出最高分的類型
-  const topType = Object.entries(scores).sort((a, b) => b[1] - a[1])[0][0];
-  const typeInfo = hollandTypeDescriptions[topType];
+  // 將分數轉換為數組並排序（從高到低）
+  const scoreArray = Object.entries(scores).sort((a, b) => b[1] - a[1]);
   
-  descriptionContainer.innerHTML = `
-    <h3>你的主要人格特質：${typeInfo.name}</h3>
-    <p class="type-description">${typeInfo.description}</p>
+  // 獲取前三高的類型（或根據分數顯示主要類型）
+  // 我們篩選出分數至少為 5 的類型，這確保只顯示有意義的類型
+  // 如果沒有足夠的類型達到這個門檻，我們最多顯示前 3 個
+  let significantTypes = scoreArray.filter(([_, score]) => score >= 5);
+  if (significantTypes.length === 0) {
+    significantTypes = scoreArray.slice(0, 3);
+  } else if (significantTypes.length > 3) {
+    significantTypes = significantTypes.slice(0, 3);
+  }
+  
+  // 創建結果 HTML
+  let resultHTML = `<h3>你的主要人格特質</h3>`;
+  
+  // 為每個主要類型添加詳細描述
+  significantTypes.forEach(([type, score], index) => {
+    const typeInfo = hollandTypeDescriptions[type];
     
-    <h4>優勢特質</h4>
-    <div class="strengths-list">
-      ${typeInfo.strengths.map(strength => `<span class="strength-tag">${strength}</span>`).join('')}
-    </div>
-    
-    <h4>可能適合的職業領域</h4>
-    <div class="careers-list">
-      ${typeInfo.careers.map(career => `<span class="career-tag">${career}</span>`).join('')}
-    </div>
-  `;
+    resultHTML += `
+      <div class="type-description-block">
+        <h4>${index + 1}. ${typeInfo.name} (${score}分)</h4>
+        <p class="type-description">${typeInfo.description}</p>
+        
+        <div class="strengths-container">
+          <h5>優勢特質</h5>
+          <div class="strengths-list">
+            ${typeInfo.strengths.map(strength => `<span class="strength-tag">${strength}</span>`).join('')}
+          </div>
+        </div>
+        
+        <div class="careers-container">
+          <h5>可能適合的職業領域</h5>
+          <div class="careers-list">
+            ${typeInfo.careers.map(career => `<span class="career-tag">${career}</span>`).join('')}
+          </div>
+        </div>
+      </div>
+      ${index < significantTypes.length - 1 ? '<hr class="type-divider">' : ''}
+    `;
+  });
+  
+  // 設置 HTML 內容
+  descriptionContainer.innerHTML = resultHTML;
 }
 
 // 重新測驗
