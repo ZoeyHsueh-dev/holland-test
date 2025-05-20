@@ -38,7 +38,7 @@ header h1 {
 
 .progress-bar {
   height: 100%;
-  background-color: #3498db;
+  background-color: #afc1a2;
   border-radius: 4px;
   width: 0;
   transition: width 0.3s ease;
@@ -74,7 +74,7 @@ ol {
 .btn {
   display: inline-block;
   padding: 12px 24px;
-  background-color: #3498db;
+  background-color: #afc1a2;
   color: white;
   border: none;
   border-radius: 4px;
@@ -84,7 +84,7 @@ ol {
 }
 
 .btn:hover {
-  background-color: #2980b9;
+  background-color: #94a588;
 }
 
 .btn:disabled {
@@ -185,7 +185,7 @@ ol {
 }
 
 .rating-option input[type="radio"]:checked + label {
-  background-color: #3498db;
+  background-color: #afc1a2;
   color: white;
 }
 
@@ -214,7 +214,7 @@ ol {
   font-weight: bold;
   text-align: center;
   margin: 20px 0;
-  color: #3498db;
+  color: #afc1a2;
 }
 
 .top-types-list {
@@ -239,7 +239,7 @@ ol {
 }
 
 .type-score {
-  color: #3498db;
+  color: #afc1a2;
   font-weight: bold;
 }
 
@@ -270,7 +270,7 @@ ol {
 
 .bar {
   height: 100%;
-  background-color: #3498db;
+  background-color: #afc1a2;
   border-radius: 10px;
 }
 
@@ -394,5 +394,72 @@ footer {
   .share-btn {
     width: 100%;
     max-width: 200px;
+  }
+}
+
+/* 多個人格特質顯示的樣式 */
+
+/* 類型描述區塊 */
+.type-description-block {
+  margin-bottom: 25px;
+}
+
+.type-description-block h4 {
+  color: #2c3e50;
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+}
+
+.type-description-block h5 {
+  color: #555;
+  font-size: 1rem;
+  margin-top: 15px;
+  margin-bottom: 8px;
+}
+
+/* 類型分隔線 */
+.type-divider {
+  border: 0;
+  height: 1px;
+  background-color: #e0e0e0;
+  margin: 25px 0;
+}
+
+/* 強化特質和職業標籤的樣式 */
+.strengths-container, .careers-container {
+  margin-bottom: 15px;
+}
+
+.strength-tag {
+  padding: 6px 12px;
+  background-color: #e1f5fe;
+  color: #0288d1;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  display: inline-block;
+  margin: 3px;
+}
+
+.career-tag {
+  padding: 6px 12px;
+  background-color: #e8f5e9;
+  color: #388e3c;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  display: inline-block;
+  margin: 3px;
+}
+
+/* 響應式調整 */
+@media (max-width: 768px) {
+  .type-description-block h4 {
+    font-size: 1.1rem;
+  }
+  
+  .strength-tag, .career-tag {
+    padding: 5px 10px;
+    font-size: 0.85rem;
   }
 }
