@@ -198,9 +198,9 @@ ol {
 .result-block {
   margin-bottom: 40px;
   padding: 20px;
-  background-color: #f8f9fa;
+  background-color: white;
   border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .result-block h3 {
@@ -398,8 +398,6 @@ footer {
 }
 
 /* 多個人格特質顯示的樣式 */
-
-/* 類型描述區塊 */
 .type-description-block {
   margin-bottom: 25px;
 }
@@ -452,6 +450,22 @@ footer {
   margin: 3px;
 }
 
+/* 圖表容器樣式調整 */
+#score-chart-container {
+  width: 60%;  /* 控制圖表寬度，原始是100% */
+  height: auto;
+  margin: 0 auto;  /* 居中顯示 */
+  position: relative;
+}
+
+/* 圖表區塊特定樣式 */
+.chart-block {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;  /* 減少內邊距 */
+}
+
 /* 響應式調整 */
 @media (max-width: 768px) {
   .type-description-block h4 {
@@ -461,5 +475,9 @@ footer {
   .strength-tag, .career-tag {
     padding: 5px 10px;
     font-size: 0.85rem;
+  }
+  
+  #score-chart-container {
+    width: 80%;  /* 在移動設備上稍微放大圖表 */
   }
 }
