@@ -235,8 +235,8 @@ function showResults(scores) {
   // 顯示最高分數類型
   showTopTypes(scores);
   
-  // 顯示所有分數
-  showAllScores(scores);
+  // 不再調用 showAllScores
+  // showAllScores(scores);
   
   // 顯示人格描述
   showHollandDescription(scores);
@@ -319,10 +319,10 @@ function showTopTypes(scores) {
   // 計算總分
   const totalScore = Object.values(scores).reduce((sum, score) => sum + score, 0);
   
-  // 將分數轉換為數組並排序
+  // 將分數轉換為數組並排序（從高到低）
   const scoreArray = Object.entries(scores).sort((a, b) => b[1] - a[1]);
   
-  // 獲取前三高的類型
+  // 獲取前三高的類型（僅用於類型代碼）
   const topThree = scoreArray.slice(0, 3);
   
   // 創建最高分數類型的代碼
@@ -333,7 +333,7 @@ function showTopTypes(scores) {
     <h3>你的主要興趣類型</h3>
     <div class="type-code">${code}</div>
     <div class="top-types-list">
-      ${topThree.map(([type, score]) => {
+      ${scoreArray.map(([type, score]) => {
         const percentage = totalScore > 0 ? Math.round((score / totalScore) * 100) : 0;
         return `
           <div class="top-type">
@@ -346,7 +346,7 @@ function showTopTypes(scores) {
   `;
 }
 
-// 顯示所有分數
+// 顯示所有分數（已移除此函數調用）
 function showAllScores(scores) {
   const scoresContainer = document.getElementById('scores-container');
   scoresContainer.innerHTML = '';
