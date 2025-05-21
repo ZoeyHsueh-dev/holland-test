@@ -386,7 +386,7 @@ function showAllScores(scores) {
   scoresContainer.appendChild(scoreBarContainer);
 }
 
-// 顯示人格描述
+// 顯示人格描述 - 移除了職業部分
 function showHollandDescription(scores) {
   const descriptionContainer = document.getElementById('holland-description');
   
@@ -406,7 +406,7 @@ function showHollandDescription(scores) {
   // 創建結果 HTML
   let resultHTML = `<h3>你的主要人格特質</h3>`;
   
-  // 為每個主要類型添加詳細描述
+  // 為每個主要類型添加詳細描述，但不包括職業
   significantTypes.forEach(([type, score], index) => {
     const typeInfo = hollandTypeDescriptions[type];
     
@@ -419,13 +419,6 @@ function showHollandDescription(scores) {
           <h5>優勢特質</h5>
           <div class="strengths-list">
             ${typeInfo.strengths.map(strength => `<span class="strength-tag">${strength}</span>`).join('')}
-          </div>
-        </div>
-        
-        <div class="careers-container">
-          <h5>可能適合的職業領域</h5>
-          <div class="careers-list">
-            ${typeInfo.careers.map(career => `<span class="career-tag">${career}</span>`).join('')}
           </div>
         </div>
       </div>
