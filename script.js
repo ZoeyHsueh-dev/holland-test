@@ -72,6 +72,9 @@ function startTest() {
   // 生成情境問題
   generateSituationQuestions();
   updateProgressBar(1, 3);
+  
+  // 滾動到頁面頂部
+  window.scrollTo(0, 0);
 }
 
 // 更新進度條
@@ -131,6 +134,9 @@ function showActivitySection() {
   // 生成活動問題
   generateActivityQuestions();
   updateProgressBar(2, 3);
+  
+  // 滾動到頁面頂部
+  window.scrollTo(0, 0);
 }
 
 // 生成活動偏好問題
@@ -234,6 +240,9 @@ function showResults(scores) {
   
   // 顯示人格描述
   showHollandDescription(scores);
+  
+  // 滾動到頁面頂部
+  window.scrollTo(0, 0);
 }
 
 // 生成分數圖表
@@ -307,6 +316,9 @@ function generateScoreChart(scores) {
 function showTopTypes(scores) {
   const topTypesContainer = document.getElementById('top-types');
   
+  // 計算總分
+  const totalScore = Object.values(scores).reduce((sum, score) => sum + score, 0);
+  
   // 將分數轉換為數組並排序
   const scoreArray = Object.entries(scores).sort((a, b) => b[1] - a[1]);
   
@@ -321,12 +333,15 @@ function showTopTypes(scores) {
     <h3>你的主要興趣類型</h3>
     <div class="type-code">${code}</div>
     <div class="top-types-list">
-      ${topThree.map(([type, score]) => `
-        <div class="top-type">
-          <div class="type-name">${hollandTypeDescriptions[type].name}</div>
-          <div class="type-score">${score}分</div>
-        </div>
-      `).join('')}
+      ${topThree.map(([type, score]) => {
+        const percentage = totalScore > 0 ? Math.round((score / totalScore) * 100) : 0;
+        return `
+          <div class="top-type">
+            <div class="type-name">${hollandTypeDescriptions[type].name}</div>
+            <div class="type-score">${percentage}%</div>
+          </div>
+        `;
+      }).join('')}
     </div>
   `;
 }
@@ -345,12 +360,15 @@ function showAllScores(scores) {
     { code: 'C', name: '組織者 (Conventional)' }
   ];
   
+  // 計算總分
+  const totalScore = Object.values(scores).reduce((sum, score) => sum + score, 0);
+  
   const scoreBarContainer = document.createElement('div');
   scoreBarContainer.className = 'score-bars';
   
   types.forEach(type => {
     const score = scores[type.code];
-    const percentage = (score / 30) * 100; // 假設最高分是30
+    const percentage = totalScore > 0 ? Math.round((score / totalScore) * 100) : 0;
     
     const scoreBar = document.createElement('div');
     scoreBar.className = 'score-bar';
@@ -359,7 +377,7 @@ function showAllScores(scores) {
       <div class="bar-container">
         <div class="bar" style="width: ${percentage}%"></div>
       </div>
-      <div class="score-value">${score}</div>
+      <div class="score-value">${percentage}%</div>
     `;
     
     scoreBarContainer.appendChild(scoreBar);
@@ -427,6 +445,9 @@ function restartTest() {
   
   // 清除URL參數
   window.history.pushState({}, document.title, window.location.pathname);
+  
+  // 滾動到頁面頂部
+  window.scrollTo(0, 0);
 }
 
 // 從URL載入結果
