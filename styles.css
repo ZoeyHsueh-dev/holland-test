@@ -225,17 +225,17 @@ ol {
   color: #afc1a2;
 }
 
+/* 主要興趣類型列表樣式 - 更新為網格佈局 */
 .top-types-list {
-  display: flex;
-  justify-content: space-around;
-  flex-wrap: wrap;
-  gap: 10px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  margin-top: 20px;
 }
 
 .top-type {
   text-align: center;
-  padding: 10px;
-  min-width: 150px;
+  padding: 15px 10px;
   border-radius: 5px;
   background-color: white;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -365,13 +365,7 @@ footer {
   }
   
   .top-types-list {
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .top-type {
-    width: 100%;
-    max-width: 300px;
+    grid-template-columns: repeat(2, 1fr);
   }
   
   .score-bar {
@@ -402,6 +396,12 @@ footer {
   .share-btn {
     width: 100%;
     max-width: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .top-types-list {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -472,20 +472,4 @@ footer {
   justify-content: center;
   align-items: center;
   padding: 10px;  /* 減少內邊距 */
-}
-
-/* 響應式調整 */
-@media (max-width: 768px) {
-  .type-description-block h4 {
-    font-size: 1.1rem;
-  }
-  
-  .strength-tag, .career-tag {
-    padding: 5px 10px;
-    font-size: 0.85rem;
-  }
-  
-  #score-chart-container {
-    width: 80%;  /* 在移動設備上稍微放大圖表 */
-  }
 }
