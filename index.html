@@ -72,11 +72,7 @@
           <div id="top-types"></div>
         </div>
         
-        <!-- 第三個區塊：六大性格分數 -->
-        <div class="result-block scores-block">
-          <h3>你的六型人格分數</h3>
-          <div id="scores-container"></div>
-        </div>
+        <!-- 移除了第三個區塊：六大性格分數 -->
         
         <!-- 第四個區塊：人格特質簡介 -->
         <div class="result-block description-block">
@@ -107,11 +103,6 @@
     <!-- 設定年份 -->
     <script>
       document.getElementById('current-year').textContent = new Date().getFullYear();
-      
-      // 檢查URL參數並載入結果（如果有）
-      window.addEventListener('DOMContentLoaded', function() {
-        loadResultsFromURL();
-      });
     </script>
   </body>
 </html>
