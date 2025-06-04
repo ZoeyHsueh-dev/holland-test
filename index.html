@@ -67,4 +67,47 @@
           </div>
         </div>
         
-        <!-- 第二個
+        <!-- 第二個區塊：主要職業興趣類型 -->
+        <div class="result-block top-types-block">
+          <div id="top-types"></div>
+        </div>
+        
+        <!-- 移除了第三個區塊：六大性格分數 -->
+        
+        <!-- 第四個區塊：人格特質簡介 -->
+        <div class="result-block description-block">
+          <div id="holland-description"></div>
+        </div>
+        
+        <!-- 更新後的行動按鈕區塊 -->
+        <div class="action-buttons">
+          <button id="copy-results" class="btn btn-secondary">複製測驗結果</button>
+          <button id="paid-analysis" class="btn btn-primary">付費取得完整解析報告</button>
+          <button id="restart-test" class="btn btn-outline">重新測驗</button>
+        </div>
+        
+        <!-- 分享區塊 -->
+        <div class="share-block">
+          <h3>分享你的測驗結果</h3>
+          <div class="share-buttons">
+            <button id="share-facebook" class="share-btn facebook">分享到Facebook</button>
+            <button id="share-line" class="share-btn line">分享到Line</button>
+            <button id="share-copy" class="share-btn copy">複製連結</button>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <p>© <span id="current-year"></span> Zoey Hsueh. 本測驗內容由 Zoey Hsueh 製作，未經授權不得轉載或改作。</p>
+      </footer>
+    </div>
+    
+    <!-- 主要 JavaScript 檔案 -->
+    <script src="script.js"></script>
+    
+    <!-- 設定年份 -->
+    <script>
+      document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
+  </body>
+</html>
