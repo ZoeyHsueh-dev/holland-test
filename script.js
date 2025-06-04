@@ -42,19 +42,7 @@ function initTest() {
   document.getElementById('start-test').addEventListener('click', startTest);
   document.getElementById('next-to-activity').addEventListener('click', showActivitySection);
   document.getElementById('submit-test').addEventListener('click', submitTest);
-  document.getElementById('restart-test').addEventListener('click', restartTest);
   document.getElementById('copy-results').addEventListener('click', copyTestResults);
-  
-  // 設置分享按鈕
-  if (document.getElementById('share-facebook')) {
-    document.getElementById('share-facebook').addEventListener('click', shareToFacebook);
-  }
-  if (document.getElementById('share-line')) {
-    document.getElementById('share-line').addEventListener('click', shareToLine);
-  }
-  if (document.getElementById('share-copy')) {
-    document.getElementById('share-copy').addEventListener('click', copyResultLink);
-  }
 }
 
 // 在頁面加載時執行
@@ -441,35 +429,27 @@ function copyTestResults() {
   
   navigator.clipboard.writeText(resultString)
     .then(() => {
-      // 改變按鈕文字提供視覺反饋
-      const button = document.getElementById('copy-results');
-      const originalText = button.textContent;
-      button.textContent = '已複製！';
-      button.style.backgroundColor = '#27ae60';
+      // 顯示複製成功反饋
+      const feedback = document.getElementById('copy-feedback');
+      feedback.classList.remove('hidden');
       
-      // 2秒後恢復原始狀態
+      // 3秒後隱藏反饋
       setTimeout(() => {
-        button.textContent = originalText;
-        button.style.backgroundColor = '';
-      }, 2000);
+        feedback.classList.add('hidden');
+      }, 3000);
     })
     .catch(err => {
       console.error('無法複製測驗結果: ', err);
-      alert('複製失敗，請手動複製結果');
+      // 如果複製失敗，顯示錯誤訊息
+      const feedback = document.getElementById('copy-feedback');
+      feedback.textContent = '複製失敗，請手動選取結果';
+      feedback.classList.remove('hidden');
+      
+      setTimeout(() => {
+        feedback.textContent = '✓ 測驗結果已複製到剪貼簿';
+        feedback.classList.add('hidden');
+      }, 3000);
     });
-}
-
-// 重新測驗
-function restartTest() {
-  document.getElementById('results-section').style.display = 'none';
-  document.getElementById('test-introduction').classList.remove('hidden');
-  updateProgressBar(0, 3);
-  
-  // 清除URL參數
-  window.history.pushState({}, document.title, window.location.pathname);
-  
-  // 滾動到頁面頂部
-  window.scrollTo(0, 0);
 }
 
 // 從URL載入結果
@@ -487,27 +467,4 @@ function loadResultsFromURL() {
     currentScores = scores; // 設置全局變量
     showResults(scores);
   }
-}
-
-// 分享功能
-function shareToFacebook() {
-  const url = encodeURIComponent(window.location.href);
-  const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
-  window.open(shareUrl, '_blank');
-}
-
-function shareToLine() {
-  const url = encodeURIComponent(window.location.href);
-  const shareUrl = `https://social-plugins.line.me/lineit/share?url=${url}`;
-  window.open(shareUrl, '_blank');
-}
-
-function copyResultLink() {
-  navigator.clipboard.writeText(window.location.href)
-    .then(() => {
-      alert('已複製測驗結果連結！');
-    })
-    .catch(err => {
-      console.error('無法複製: ', err);
-    });
 }
