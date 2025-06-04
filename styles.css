@@ -325,11 +325,11 @@ ol {
 }
 
 .btn-premium {
-  background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+  background: linear-gradient(135deg, #637456, #758866);
   font-weight: bold;
   font-size: 1.1rem;
   padding: 15px 30px;
-  box-shadow: 0 4px 15px rgba(238, 90, 82, 0.3);
+  box-shadow: 0 4px 15px rgba(99, 116, 86, 0.3);
   border: none;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -337,20 +337,20 @@ ol {
 }
 
 .btn-premium:hover {
-  background: linear-gradient(135deg, #ee5a52, #ff6b6b);
+  background: linear-gradient(135deg, #758866, #637456);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(238, 90, 82, 0.4);
+  box-shadow: 0 6px 20px rgba(99, 116, 86, 0.4);
 }
 
 .btn-copy {
-  background-color: #95a5a6;
+  background-color: #afc1a2;
   color: white;
   font-size: 0.95rem;
   padding: 12px 24px;
 }
 
 .btn-copy:hover {
-  background-color: #7f8c8d;
+  background-color: #94a588;
 }
 
 /* 複製反饋樣式 */
