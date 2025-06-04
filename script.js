@@ -2,6 +2,7 @@
 let situationQuestions = [];
 let activityQuestions = [];
 let hollandTypeDescriptions = {};
+let currentScores = {}; // 新增全局變量來存儲當前分數
 
 // 從外部文件加載測驗數據
 async function loadTestData() {
@@ -42,14 +43,7 @@ function initTest() {
   document.getElementById('next-to-activity').addEventListener('click', showActivitySection);
   document.getElementById('submit-test').addEventListener('click', submitTest);
   document.getElementById('restart-test').addEventListener('click', restartTest);
-  
-  // 設置新的按鈕事件監聽器
-  if (document.getElementById('copy-results')) {
-    document.getElementById('copy-results').addEventListener('click', copyTestResults);
-  }
-  if (document.getElementById('paid-analysis')) {
-    document.getElementById('paid-analysis').addEventListener('click', goToPaidAnalysis);
-  }
+  document.getElementById('copy-results').addEventListener('click', copyTestResults);
   
   // 設置分享按鈕
   if (document.getElementById('share-facebook')) {
@@ -193,6 +187,7 @@ function checkActivityCompletion() {
 function submitTest() {
   // 計算分數
   const scores = calculateScores();
+  currentScores = scores; // 保存分數到全局變量
   
   // 更新進度條
   updateProgressBar(3, 3);
@@ -243,21 +238,11 @@ function showResults(scores) {
   // 顯示最高分數類型
   showTopTypes(scores);
   
+  // 不再調用 showAllScores
+  // showAllScores(scores);
+  
   // 顯示人格描述
   showHollandDescription(scores);
-  
-  // 設置新按鈕的事件監聽器（確保在按鈕渲染後設置）
-  setTimeout(() => {
-    if (document.getElementById('copy-results')) {
-      document.getElementById('copy-results').addEventListener('click', copyTestResults);
-    }
-    if (document.getElementById('paid-analysis')) {
-      document.getElementById('paid-analysis').addEventListener('click', goToPaidAnalysis);
-    }
-    if (document.getElementById('restart-test')) {
-      document.getElementById('restart-test').addEventListener('click', restartTest);
-    }
-  }, 100);
   
   // 滾動到頁面頂部
   window.scrollTo(0, 0);
@@ -364,6 +349,46 @@ function showTopTypes(scores) {
   `;
 }
 
+// 顯示所有分數（已移除此函數調用）
+function showAllScores(scores) {
+  const scoresContainer = document.getElementById('scores-container');
+  scoresContainer.innerHTML = '';
+  
+  const types = [
+    { code: 'R', name: '實踐者 (Realistic)' },
+    { code: 'I', name: '思考者 (Investigative)' },
+    { code: 'A', name: '創造者 (Artistic)' },
+    { code: 'S', name: '助人者 (Social)' },
+    { code: 'E', name: '影響者 (Enterprising)' },
+    { code: 'C', name: '組織者 (Conventional)' }
+  ];
+  
+  // 計算總分
+  const totalScore = Object.values(scores).reduce((sum, score) => sum + score, 0);
+  
+  const scoreBarContainer = document.createElement('div');
+  scoreBarContainer.className = 'score-bars';
+  
+  types.forEach(type => {
+    const score = scores[type.code];
+    const percentage = totalScore > 0 ? Math.round((score / totalScore) * 100) : 0;
+    
+    const scoreBar = document.createElement('div');
+    scoreBar.className = 'score-bar';
+    scoreBar.innerHTML = `
+      <div class="score-label">${type.name}</div>
+      <div class="bar-container">
+        <div class="bar" style="width: ${percentage}%"></div>
+      </div>
+      <div class="score-value">${percentage}%</div>
+    `;
+    
+    scoreBarContainer.appendChild(scoreBar);
+  });
+  
+  scoresContainer.appendChild(scoreBarContainer);
+}
+
 // 顯示人格描述 - 移除了職業部分
 function showHollandDescription(scores) {
   const descriptionContainer = document.getElementById('holland-description');
@@ -408,44 +433,30 @@ function showHollandDescription(scores) {
   descriptionContainer.innerHTML = resultHTML;
 }
 
-// 生成結果代碼
-function generateResultCode(scores) {
-  // 將分數按從高到低排序
-  const sortedScores = Object.entries(scores).sort((a, b) => b[1] - a[1]);
-  
-  // 生成代碼格式：類型+分數 (例如: C21A12R8I7S4E3)
-  const resultCode = sortedScores.map(([type, score]) => `${type}${score}`).join('');
-  
-  return resultCode;
-}
-
-// 複製測驗結果代碼
+// 複製測驗結果函數
 function copyTestResults() {
-  // 從 localStorage 獲取最新的測驗結果
-  const savedResults = localStorage.getItem('hollandResults');
-  if (!savedResults) {
-    alert('無法找到測驗結果，請重新進行測驗。');
-    return;
-  }
+  // 根據分數從高到低排序生成結果字串
+  const scoreArray = Object.entries(currentScores).sort((a, b) => b[1] - a[1]);
+  const resultString = scoreArray.map(([type, score]) => `${type}${score}`).join('');
   
-  const results = JSON.parse(savedResults);
-  const resultCode = generateResultCode(results.scores);
-  
-  // 複製到剪貼板
-  navigator.clipboard.writeText(resultCode)
+  navigator.clipboard.writeText(resultString)
     .then(() => {
-      alert('測驗結果已複製！\n結果代碼：' + resultCode);
+      // 改變按鈕文字提供視覺反饋
+      const button = document.getElementById('copy-results');
+      const originalText = button.textContent;
+      button.textContent = '已複製！';
+      button.style.backgroundColor = '#27ae60';
+      
+      // 2秒後恢復原始狀態
+      setTimeout(() => {
+        button.textContent = originalText;
+        button.style.backgroundColor = '';
+      }, 2000);
     })
     .catch(err => {
-      // 如果 clipboard API 不可用，顯示結果讓用戶手動複製
-      console.error('無法複製到剪貼板: ', err);
-      prompt('請手動複製以下測驗結果代碼：', resultCode);
+      console.error('無法複製測驗結果: ', err);
+      alert('複製失敗，請手動複製結果');
     });
-}
-
-// 前往付費解析頁面
-function goToPaidAnalysis() {
-  window.open('https://lihi.cc/UxdoW', '_blank');
 }
 
 // 重新測驗
@@ -473,6 +484,7 @@ function loadResultsFromURL() {
         scores[type] = 0; // 設定預設值
       }
     });
+    currentScores = scores; // 設置全局變量
     showResults(scores);
   }
 }
