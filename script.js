@@ -246,7 +246,7 @@ function showResults(scores) {
   // 顯示人格描述
   showHollandDescription(scores);
   
-  // 設置新按鈕的事件監聽器
+  // 設置新按鈕的事件監聽器（確保在按鈕渲染後設置）
   setTimeout(() => {
     if (document.getElementById('copy-results')) {
       document.getElementById('copy-results').addEventListener('click', copyTestResults);
