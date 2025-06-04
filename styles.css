@@ -97,7 +97,7 @@ ol {
   cursor: not-allowed;
 }
 
-#start-test, #restart-test {
+#start-test {
   width: 100%;
   margin-top: 20px;
 }
@@ -315,49 +315,37 @@ ol {
   color: #388e3c;
 }
 
-/* 行動按鈕區塊樣式 */
+/* 動作按鈕樣式 */
 .action-buttons {
   display: flex;
   flex-direction: column;
   gap: 15px;
-  margin: 30px 0;
+  margin-bottom: 30px;
 }
 
-/* 主要按鈕 - 付費解析 */
-.btn-primary {
+.btn-copy {
+  background-color: #3498db;
+}
+
+.btn-copy:hover {
+  background-color: #2980b9;
+}
+
+.btn-restart {
+  background-color: #95a5a6;
+}
+
+.btn-restart:hover {
+  background-color: #7f8c8d;
+}
+
+.btn-premium {
   background-color: #e74c3c;
-  color: white;
   font-weight: bold;
-  font-size: 1.1rem;
-  padding: 15px 24px;
 }
 
-.btn-primary:hover {
+.btn-premium:hover {
   background-color: #c0392b;
-}
-
-/* 次要按鈕 - 複製結果 */
-.btn-secondary {
-  background-color: #afc1a2;
-  color: white;
-  font-weight: 500;
-}
-
-.btn-secondary:hover {
-  background-color: #94a588;
-}
-
-/* 外框按鈕 - 重新測驗 */
-.btn-outline {
-  background-color: transparent;
-  color: #afc1a2;
-  border: 2px solid #afc1a2;
-  font-weight: 500;
-}
-
-.btn-outline:hover {
-  background-color: #afc1a2;
-  color: white;
 }
 
 /* 分享按鈕 */
@@ -435,6 +423,10 @@ footer {
     text-align: left;
   }
   
+  .action-buttons {
+    flex-direction: column;
+  }
+  
   .share-buttons {
     flex-direction: column;
     align-items: center;
@@ -446,21 +438,13 @@ footer {
   }
 }
 
-@media (min-width: 768px) {
-  .action-buttons {
-    flex-direction: row;
-    justify-content: center;
-  }
-  
-  .action-buttons .btn {
-    flex: 1;
-    max-width: 250px;
-  }
-}
-
 @media (max-width: 480px) {
   .top-types-list {
     grid-template-columns: 1fr;
+  }
+  
+  .action-buttons {
+    gap: 10px;
   }
 }
 
