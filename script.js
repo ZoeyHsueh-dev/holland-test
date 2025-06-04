@@ -189,13 +189,7 @@ function submitTest() {
     timestamp: new Date().toISOString()
   }));
   
-  // 更新URL以包含結果參數，但不重新加載頁面
-  const resultsParams = new URLSearchParams();
-  for (const type in scores) {
-    resultsParams.append(type, scores[type]);
-  }
-  const newUrl = `${window.location.pathname}?${resultsParams.toString()}`;
-  window.history.pushState({ path: newUrl }, '', newUrl);
+  // 不再更新URL參數，保持乾淨的URL
 }
 
 // 計算分數
@@ -452,19 +446,26 @@ function copyTestResults() {
     });
 }
 
-// 從URL載入結果
+// 從URL載入結果 - 現在改為從localStorage載入
 function loadResultsFromURL() {
-  const params = new URLSearchParams(window.location.search);
-  if (params.has('R')) { // 檢查是否有至少一個分數參數
-    const scores = {};
-    ['R', 'I', 'A', 'S', 'E', 'C'].forEach(type => {
-      if (params.has(type)) {
-        scores[type] = parseInt(params.get(type));
-      } else {
-        scores[type] = 0; // 設定預設值
+  // 檢查localStorage中是否有結果
+  const savedResults = localStorage.getItem('hollandResults');
+  if (savedResults) {
+    try {
+      const data = JSON.parse(savedResults);
+      const scores = data.scores;
+      
+      // 檢查結果是否在合理時間內（例如1小時內）
+      const timestamp = new Date(data.timestamp);
+      const now = new Date();
+      const hoursDiff = (now - timestamp) / (1000 * 60 * 60);
+      
+      if (hoursDiff <= 1 && scores) {
+        currentScores = scores;
+        showResults(scores);
       }
-    });
-    currentScores = scores; // 設置全局變量
-    showResults(scores);
+    } catch (error) {
+      console.error('載入儲存的結果時出錯:', error);
+    }
   }
 }
