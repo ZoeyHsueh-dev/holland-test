@@ -43,6 +43,12 @@ function initTest() {
   document.getElementById('next-to-activity').addEventListener('click', showActivitySection);
   document.getElementById('submit-test').addEventListener('click', submitTest);
   document.getElementById('copy-results').addEventListener('click', copyTestResults);
+  
+  // 設置重新測驗連結（如果存在）
+  const restartLink = document.getElementById('restart-link');
+  if (restartLink) {
+    restartLink.addEventListener('click', restartTest);
+  }
 }
 
 // 在頁面加載時執行
@@ -468,4 +474,44 @@ function loadResultsFromURL() {
       console.error('載入儲存的結果時出錯:', error);
     }
   }
+}
+
+// 重新測驗函數
+function restartTest(event) {
+  if (event) {
+    event.preventDefault(); // 防止連結跳轉
+  }
+  
+  // 清除localStorage中的測驗結果
+  localStorage.removeItem('hollandResults');
+  
+  // 清除當前分數
+  currentScores = {};
+  
+  // 隱藏結果區塊，顯示介紹區塊
+  document.getElementById('results-section').style.display = 'none';
+  document.getElementById('test-introduction').classList.remove('hidden');
+  
+  // 重置進度條
+  updateProgressBar(0, 3);
+  
+  // 清除所有已選擇的答案
+  document.querySelectorAll('input[type="radio"]').forEach(input => {
+    input.checked = false;
+  });
+  
+  // 重置按鈕狀態
+  document.getElementById('next-to-activity').disabled = true;
+  document.getElementById('submit-test').disabled = true;
+  
+  // 清除問題容器
+  document.getElementById('situation-questions').innerHTML = '';
+  document.getElementById('activity-questions').innerHTML = '';
+  
+  // 隱藏其他區塊
+  document.getElementById('situation-section').classList.add('hidden');
+  document.getElementById('activity-section').classList.add('hidden');
+  
+  // 滾動到頁面頂部
+  window.scrollTo(0, 0);
 }
