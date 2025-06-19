@@ -428,6 +428,16 @@ footer {
   .action-buttons {
     gap: 10px;
   }
+  
+  /* 手機版圖表調整 */
+  #score-chart-container {
+    width: 95%;
+    max-width: 400px;
+  }
+  
+  .chart-block {
+    padding: 15px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -495,10 +505,11 @@ footer {
 
 /* 圖表容器樣式調整 */
 #score-chart-container {
-  width: 60%;  /* 控制圖表寬度，原始是100% */
+  width: 80%;  /* 調整為80%以容納圓餅圖和圖例 */
   height: auto;
   margin: 0 auto;  /* 居中顯示 */
   position: relative;
+  max-width: 500px; /* 設定最大寬度 */
 }
 
 /* 圖表區塊特定樣式 */
@@ -506,5 +517,5 @@ footer {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 10px;  /* 減少內邊距 */
+  padding: 20px;  /* 增加內邊距以容納圖例 */
 }
