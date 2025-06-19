@@ -287,30 +287,14 @@ function generateScoreChart(scores) {
       responsive: true,
       maintainAspectRatio: true,
       layout: {
-        padding: 20
+        padding: 60 // 增加內邊距以容納外部標籤
       },
       plugins: {
         legend: {
-          display: false // 隱藏圖例，因為我們會在扇形上直接顯示
+          display: false // 隱藏圖例
         },
         tooltip: {
           enabled: false // 禁用工具提示
-        },
-        datalabels: {
-          display: true,
-          formatter: (value, context) => {
-            const percentage = totalScore > 0 ? Math.round((value / totalScore) * 100) : 0;
-            const label = context.chart.data.labels[context.dataIndex];
-            return percentage > 5 ? `${label}\n${percentage}%` : ''; // 只顯示大於5%的標籤
-          },
-          color: '#333',
-          font: {
-            size: 11,
-            weight: 'bold'
-          },
-          textAlign: 'center',
-          anchor: 'center',
-          clamp: true
         }
       },
       elements: {
@@ -320,39 +304,60 @@ function generateScoreChart(scores) {
       }
     },
     plugins: [{
-      // 自定義插件來繪製標籤
+      // 自定義插件來繪製外部標籤和連接線
       afterDatasetsDraw: function(chart) {
         const ctx = chart.ctx;
         const data = chart.data.datasets[0].data;
         const total = data.reduce((sum, value) => sum + value, 0);
+        const centerX = chart.chartArea.left + (chart.chartArea.right - chart.chartArea.left) / 2;
+        const centerY = chart.chartArea.top + (chart.chartArea.bottom - chart.chartArea.top) / 2;
         
         chart.data.datasets[0].data.forEach((value, index) => {
           const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
           
-          // 只顯示大於3%的標籤，避免擁擠
-          if (percentage > 3) {
+          if (percentage > 0) {
             const meta = chart.getDatasetMeta(0);
             const arc = meta.data[index];
-            const centerX = arc.x;
-            const centerY = arc.y;
             
-            // 計算標籤位置（在扇形的中心）
+            // 計算角度
             const angle = (arc.startAngle + arc.endAngle) / 2;
-            const radius = (arc.innerRadius + arc.outerRadius) / 2;
-            const labelX = centerX + Math.cos(angle) * radius * 0.7;
-            const labelY = centerY + Math.sin(angle) * radius * 0.7;
             
+            // 內圓邊緣點（連接線起點）
+            const innerRadius = arc.outerRadius;
+            const innerX = centerX + Math.cos(angle) * innerRadius;
+            const innerY = centerY + Math.sin(angle) * innerRadius;
+            
+            // 外部標籤位置
+            const labelRadius = innerRadius + 30;
+            const labelX = centerX + Math.cos(angle) * labelRadius;
+            const labelY = centerY + Math.sin(angle) * labelRadius;
+            
+            // 繪製連接線
+            ctx.strokeStyle = '#666';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(innerX, innerY);
+            ctx.lineTo(labelX, labelY);
+            ctx.stroke();
+            
+            // 繪製標籤
             ctx.fillStyle = '#333';
-            ctx.font = 'bold 11px Arial';
-            ctx.textAlign = 'center';
+            ctx.font = 'bold 12px Arial';
             ctx.textBaseline = 'middle';
             
             const label = chart.data.labels[index];
             const text = `${label}\n${percentage}%`;
             const lines = text.split('\n');
             
+            // 根據角度調整文字對齊方式
+            if (angle > Math.PI / 2 && angle < 3 * Math.PI / 2) {
+              ctx.textAlign = 'right';
+            } else {
+              ctx.textAlign = 'left';
+            }
+            
             lines.forEach((line, lineIndex) => {
-              ctx.fillText(line, labelX, labelY + (lineIndex - 0.5) * 12);
+              ctx.fillText(line, labelX, labelY + (lineIndex - 0.5) * 14);
             });
           }
         });
