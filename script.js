@@ -248,30 +248,27 @@ function generateScoreChart(scores) {
   // 計算總分
   const totalScore = Object.values(scores).reduce((sum, score) => sum + score, 0);
   
-  // 為每個類型定義顏色
+  // 為每個類型定義低飽和度顏色
   const typeColors = {
-    'R': '#8B4513', // 實踐者 - 棕色
-    'I': '#4682B4', // 思考者 - 鋼藍色
-    'A': '#FF69B4', // 創造者 - 粉紅色
-    'S': '#32CD32', // 助人者 - 綠色
-    'E': '#FF6347', // 影響者 - 橘紅色
-    'C': '#9370DB'  // 組織者 - 紫色
+    'R': '#A0877D', // 實踐者 - 柔和棕色
+    'I': '#7A9BC4', // 思考者 - 柔和藍色
+    'A': '#D4A6C8', // 創造者 - 柔和粉色
+    'S': '#8FBC8F', // 助人者 - 柔和綠色
+    'E': '#D4A374', // 影響者 - 柔和橘色
+    'C': '#B19CD9'  // 組織者 - 柔和紫色
   };
   
   // 準備數據
   const labels = [];
   const data = [];
   const backgroundColor = [];
-  const percentages = [];
   
   Object.entries(scores).forEach(([type, score]) => {
-    const percentage = totalScore > 0 ? Math.round((score / totalScore) * 100) : 0;
-    const typeName = hollandTypeDescriptions[type].name;
+    const typeName = hollandTypeDescriptions[type].name.split('（')[0]; // 只取中文名稱
     
-    labels.push(`${typeName} (${percentage}%)`);
+    labels.push(typeName);
     data.push(score);
     backgroundColor.push(typeColors[type]);
-    percentages.push(percentage);
   });
   
   window.scoreChart = new Chart(ctx, {
@@ -283,33 +280,37 @@ function generateScoreChart(scores) {
         backgroundColor: backgroundColor,
         borderColor: '#ffffff',
         borderWidth: 2,
-        hoverBorderWidth: 3
+        hoverBorderWidth: 2
       }]
     },
     options: {
       responsive: true,
       maintainAspectRatio: true,
+      layout: {
+        padding: 20
+      },
       plugins: {
         legend: {
-          position: 'bottom',
-          labels: {
-            padding: 20,
-            font: {
-              size: 12
-            },
-            usePointStyle: true,
-            pointStyle: 'circle'
-          }
+          display: false // 隱藏圖例，因為我們會在扇形上直接顯示
         },
         tooltip: {
-          callbacks: {
-            label: function(context) {
-              const label = context.label || '';
-              const value = context.parsed;
-              const percentage = totalScore > 0 ? Math.round((value / totalScore) * 100) : 0;
-              return `${label}: ${value}分 (${percentage}%)`;
-            }
-          }
+          enabled: false // 禁用工具提示
+        },
+        datalabels: {
+          display: true,
+          formatter: (value, context) => {
+            const percentage = totalScore > 0 ? Math.round((value / totalScore) * 100) : 0;
+            const label = context.chart.data.labels[context.dataIndex];
+            return percentage > 5 ? `${label}\n${percentage}%` : ''; // 只顯示大於5%的標籤
+          },
+          color: '#333',
+          font: {
+            size: 11,
+            weight: 'bold'
+          },
+          textAlign: 'center',
+          anchor: 'center',
+          clamp: true
         }
       },
       elements: {
@@ -317,7 +318,46 @@ function generateScoreChart(scores) {
           borderWidth: 2
         }
       }
-    }
+    },
+    plugins: [{
+      // 自定義插件來繪製標籤
+      afterDatasetsDraw: function(chart) {
+        const ctx = chart.ctx;
+        const data = chart.data.datasets[0].data;
+        const total = data.reduce((sum, value) => sum + value, 0);
+        
+        chart.data.datasets[0].data.forEach((value, index) => {
+          const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
+          
+          // 只顯示大於3%的標籤，避免擁擠
+          if (percentage > 3) {
+            const meta = chart.getDatasetMeta(0);
+            const arc = meta.data[index];
+            const centerX = arc.x;
+            const centerY = arc.y;
+            
+            // 計算標籤位置（在扇形的中心）
+            const angle = (arc.startAngle + arc.endAngle) / 2;
+            const radius = (arc.innerRadius + arc.outerRadius) / 2;
+            const labelX = centerX + Math.cos(angle) * radius * 0.7;
+            const labelY = centerY + Math.sin(angle) * radius * 0.7;
+            
+            ctx.fillStyle = '#333';
+            ctx.font = 'bold 11px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            
+            const label = chart.data.labels[index];
+            const text = `${label}\n${percentage}%`;
+            const lines = text.split('\n');
+            
+            lines.forEach((line, lineIndex) => {
+              ctx.fillText(line, labelX, labelY + (lineIndex - 0.5) * 12);
+            });
+          }
+        });
+      }
+    }]
   });
 }
 
