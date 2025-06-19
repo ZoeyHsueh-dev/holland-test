@@ -431,8 +431,8 @@ footer {
   
   /* 手機版圖表調整 */
   #score-chart-container {
-    width: 320px;
-    height: 320px;
+    width: 350px;
+    height: 350px;
   }
   
   .chart-block {
@@ -505,8 +505,8 @@ footer {
 
 /* 圖表容器樣式調整 */
 #score-chart-container {
-  width: 400px;  /* 增加寬度以容納外部標籤 */
-  height: 400px; /* 增加高度以容納外部標籤 */
+  width: 450px;  /* 增加容器寬度以容納更大的文字 */
+  height: 450px; /* 增加容器高度 */
   margin: 0 auto;  /* 居中顯示 */
   position: relative;
 }
