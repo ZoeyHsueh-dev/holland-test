@@ -236,7 +236,7 @@ function showResults(scores) {
   window.scrollTo(0, 0);
 }
 
-// 生成分數圖表
+// 生成分數圖表 - 改為圓餅圖
 function generateScoreChart(scores) {
   const ctx = document.getElementById('score-chart').getContext('2d');
   
@@ -245,24 +245,45 @@ function generateScoreChart(scores) {
     window.scoreChart.destroy();
   }
   
+  // 計算總分
+  const totalScore = Object.values(scores).reduce((sum, score) => sum + score, 0);
+  
+  // 為每個類型定義顏色
+  const typeColors = {
+    'R': '#8B4513', // 實踐者 - 棕色
+    'I': '#4682B4', // 思考者 - 鋼藍色
+    'A': '#FF69B4', // 創造者 - 粉紅色
+    'S': '#32CD32', // 助人者 - 綠色
+    'E': '#FF6347', // 影響者 - 橘紅色
+    'C': '#9370DB'  // 組織者 - 紫色
+  };
+  
+  // 準備數據
+  const labels = [];
+  const data = [];
+  const backgroundColor = [];
+  const percentages = [];
+  
+  Object.entries(scores).forEach(([type, score]) => {
+    const percentage = totalScore > 0 ? Math.round((score / totalScore) * 100) : 0;
+    const typeName = hollandTypeDescriptions[type].name;
+    
+    labels.push(`${typeName} (${percentage}%)`);
+    data.push(score);
+    backgroundColor.push(typeColors[type]);
+    percentages.push(percentage);
+  });
+  
   window.scoreChart = new Chart(ctx, {
-    type: 'radar',
+    type: 'pie',
     data: {
-      labels: [
-        '實踐者 (R)', 
-        '思考者 (I)', 
-        '創造者 (A)', 
-        '助人者 (S)', 
-        '影響者 (E)', 
-        '組織者 (C)'
-      ],
+      labels: labels,
       datasets: [{
-        label: '您的分數',
-        data: [scores.R, scores.I, scores.A, scores.S, scores.E, scores.C],
-        backgroundColor: 'rgba(175, 193, 162, 0.2)',
-        borderColor: 'rgba(175, 193, 162, 1)',
+        data: data,
+        backgroundColor: backgroundColor,
+        borderColor: '#ffffff',
         borderWidth: 2,
-        pointBackgroundColor: 'rgba(175, 193, 162, 1)'
+        hoverBorderWidth: 3
       }]
     },
     options: {
@@ -270,33 +291,30 @@ function generateScoreChart(scores) {
       maintainAspectRatio: true,
       plugins: {
         legend: {
+          position: 'bottom',
           labels: {
+            padding: 20,
             font: {
-              size: 16 // 增加圖例字體大小
+              size: 12
+            },
+            usePointStyle: true,
+            pointStyle: 'circle'
+          }
+        },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              const label = context.label || '';
+              const value = context.parsed;
+              const percentage = totalScore > 0 ? Math.round((value / totalScore) * 100) : 0;
+              return `${label}: ${value}分 (${percentage}%)`;
             }
           }
         }
       },
-      scales: {
-        r: {
-          beginAtZero: true,
-          suggestedMax: 30,
-          ticks: {
-            stepSize: 5,
-            display: false // 隱藏刻度數字以減少雜亂
-          },
-          pointLabels: {
-            font: {
-              size: 16, // 增加軸標籤字體大小
-              weight: 'bold' // 加粗字體
-            }
-          },
-          grid: {
-            color: 'rgba(0, 0, 0, 0.1)' // 使網格線更淡
-          },
-          angleLines: {
-            color: 'rgba(0, 0, 0, 0.1)' // 使角度線更淡
-          }
+      elements: {
+        arc: {
+          borderWidth: 2
         }
       }
     }
