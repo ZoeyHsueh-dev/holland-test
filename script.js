@@ -280,14 +280,15 @@ function generateScoreChart(scores) {
         backgroundColor: backgroundColor,
         borderColor: '#ffffff',
         borderWidth: 2,
-        hoverBorderWidth: 2
+        hoverBorderWidth: 2,
+        radius: '60%' // 縮小圓餅圖本身
       }]
     },
     options: {
       responsive: true,
       maintainAspectRatio: true,
       layout: {
-        padding: 60 // 增加內邊距以容納外部標籤
+        padding: 70 // 增加內邊距以容納更大的外部標籤
       },
       plugins: {
         legend: {
@@ -328,7 +329,7 @@ function generateScoreChart(scores) {
             const innerY = centerY + Math.sin(angle) * innerRadius;
             
             // 外部標籤位置
-            const labelRadius = innerRadius + 30;
+            const labelRadius = innerRadius + 40; // 增加標籤距離
             const labelX = centerX + Math.cos(angle) * labelRadius;
             const labelY = centerY + Math.sin(angle) * labelRadius;
             
@@ -342,7 +343,7 @@ function generateScoreChart(scores) {
             
             // 繪製標籤
             ctx.fillStyle = '#333';
-            ctx.font = 'bold 12px Arial';
+            ctx.font = 'bold 14px Arial'; // 增加字體大小
             ctx.textBaseline = 'middle';
             
             const label = chart.data.labels[index];
@@ -357,7 +358,7 @@ function generateScoreChart(scores) {
             }
             
             lines.forEach((line, lineIndex) => {
-              ctx.fillText(line, labelX, labelY + (lineIndex - 0.5) * 14);
+              ctx.fillText(line, labelX, labelY + (lineIndex - 0.5) * 16); // 增加行間距
             });
           }
         });
